@@ -112,3 +112,12 @@ jobs:
       with:
         name: OpenWrt_firmware
         path: ${{ env.FIRMWARE }}
+
+    - name: Upload k3 trx
+      uses: actions/upload-artifact@master
+      if: steps.compile.outputs.status == 'success'
+      with:
+        name: OpenWrt_K3_TRX
+        path: openwrt/bin/targets/bcm53xx/generic/openwrt-bcm53xx-phicomm-k3-squashfs.trx
+
+
