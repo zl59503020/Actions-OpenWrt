@@ -16,6 +16,7 @@ on:
 
 env:
   REPO_URL: https://github.com/Leo357449107/Build-Armbian
+  CONFIG_FILE: .armbian.config
 
 jobs:
   build:
@@ -27,13 +28,15 @@ jobs:
       uses: actions/checkout@master
 
     - name: Clone source code
-      run: git clone --depth 1 $REPO_URL -b 20.11 armbian
+      run: git clone --depth 1 $REPO_URL armbian
 
     - name: Compile the firmware
       id: compile
       run: |
         cd armbian
-        ./compile.sh BOARD=aml-s812 BRANCH=current RELEASE=20.11 BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img
+        touch config.sh
+        [ -e $CONFIG_FILE ] && cat $CONFIG_FILE > config.sh
+        ./compile.sh `cat config.sh`
         tar -cJvf armbian.tar.xz output
         echo "::set-output name=status::success"
         
