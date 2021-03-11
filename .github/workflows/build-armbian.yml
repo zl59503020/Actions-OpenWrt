@@ -1,0 +1,71 @@
+#=================================================
+# https://github.com/P3TERX/Actions-OpenWrt
+# Description: Build OpenWrt using GitHub Actions
+# Lisence: MIT
+# Author: P3TERX
+# Blog: https://p3terx.com
+#=================================================
+
+name: Build Armbian
+
+on:
+  release:
+    types: published
+  push:
+    branches:
+      - master
+    paths:
+      - '.armbian.config'
+#  schedule:
+#    - cron: 0 8 * * 5
+#  watch:
+#    types: started
+
+env:
+  REPO_URL: https://github.com/Leo357449107/Build-Armbian
+  REPO_BRANCH: 20.11
+  CONFIG_FILE: .armbian.config
+  DIY_SH: diy.sh
+  SSH_ACTIONS: false
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Clone source code
+      run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH armbian
+
+    - name: SSH connection to Actions
+      uses: P3TERX/debugger-action@master
+      if: env.SSH_ACTIONS == 'true'
+
+    - name: Compile the firmware
+      id: compile
+      run: |
+        cd armbian
+        ./compile.sh BOARD=aml-s812 BRANCH=current RELEASE=20.11 BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img
+        echo "::set-output name=status::success"
+
+    - name: Tar output files
+      id: organize
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      run: |
+        cd armbian/
+        tar -cJvf armbian.tar.xz output
+        echo "::set-output name=status::success"
+
+    - name: Upload armbian firmware
+      uses: actions/upload-artifact@master
+      if: steps.compile.outputs.status == 'success'
+      with:
+        name: Armbian_Build_Output
+        path: armbian/armbian.tar.xz
+
