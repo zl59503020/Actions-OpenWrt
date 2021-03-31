@@ -36,9 +36,10 @@ jobs:
       id: compile
       run: |
         cd armbian
-        touch config.sh
-        [ -e $CONFIG_FILE ] && cat $CONFIG_FILE > config.sh
-        ./compile.sh `cat config.sh`
+        touch param.sh
+        [ -e $CONFIG_FILE ] && cat $CONFIG_FILE > param.sh
+        cat param.sh
+        ./compile.sh `cat param.sh`
         tar -cJvf armbian.tar.xz output
         echo "::set-output name=status::success"
         
