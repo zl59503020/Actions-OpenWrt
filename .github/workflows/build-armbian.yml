@@ -30,9 +30,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Clone source code
-      run: |
-        git clone $REPO_URL armbian
-        git reset --hard 7823483f39d4c4e877b4af70365cda28a33f55e3
+      run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH armbian
 
     - name: Compile the firmware
       id: compile
