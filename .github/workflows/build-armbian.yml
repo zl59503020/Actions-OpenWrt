@@ -35,11 +35,11 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
-        cd armbian
         touch param.sh
         [ -e $CONFIG_FILE ] && cat $CONFIG_FILE > param.sh
         cat param.sh
-        ./compile.sh `cat param.sh`
+        cd armbian
+        ./compile.sh `cat ../param.sh`
         tar -cJvf armbian.tar.xz output
         echo "::set-output name=status::success"
         
