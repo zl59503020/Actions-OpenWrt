@@ -16,8 +16,7 @@ on:
 
 env:
   REPO_URL: https://github.com/Leo357449107/Build-Armbian
-  REPO_BRANCH: 20.11
-  REPO_COMMIT: 7823483f39d4c4e877b4af70365cda28a33f55e3
+  REPO_BRANCH: master
   CONFIG_FILE: .armbian.config
 
 jobs:
