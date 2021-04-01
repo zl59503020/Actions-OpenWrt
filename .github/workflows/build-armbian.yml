@@ -15,8 +15,7 @@ on:
 #    types: started
 
 env:
-#  REPO_URL: https://github.com/Leo357449107/Build-Armbian
-  REPO_URL: https://github.com/pazulin/Build-Armbian
+  REPO_URL: https://github.com/Leo357449107/Build-Armbian
 #  REPO_BRANCH: 20.11
   REPO_BRANCH: master
   CONFIG_FILE: .armbian.config
